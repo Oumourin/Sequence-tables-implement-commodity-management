@@ -4,6 +4,7 @@
 #define _arrayLength 100		//sqList Max Length
 
 using namespace std;
+void findMenu();
 
 vector<int> g_findVector;			//Result of finding vector
 									//Class Definition
@@ -194,6 +195,8 @@ public:
 	void sortByStateNum();		//sort by StateNum
 	unsigned int findInterface(int flagSwitch);		//find Function's interface
 	void sortInterface(int flagSwitch);		//sort Function's interface
+	void delGoods();
+	void delGoods(int subTab);
 };
 
 bool CsqList::findGoods(string targetString)
@@ -423,6 +426,59 @@ unsigned int CsqList::findInterface(int flagSwitch)
 	return flagFind;		//return Tab
 }
 
+void CsqList::delGoods()
+{
+	bool subTab;
+	bool delTab;
+	int tempFlag;
+	findMenu();
+	cout << "请选择查找删除对象方法：" << endl;
+	cin >> tempFlag;
+	subTab = findInterface(tempFlag);
+	
+	if (subTab)
+	{
+		char tempChar;
+		cout << "是否确认删除上述项目？确认键入Y/y：";
+		cin >> tempChar;
+		if (tempChar=='Y'||tempChar=='y')
+		{
+			int goodsTab;
+			for (int i = 0; i < g_findVector.size(); i++)
+			{
+				goodsTab = g_findVector[i] - i;
+				for (int j=goodsTab ; j < m_listLength; j++)
+				{
+					m_cgSqList[j] = m_cgSqList[j + 1];
+				}
+				m_listLength--;
+			}
+		}
+		cout << "删除完毕！" << endl;
+	}
+}
+
+void CsqList::delGoods(int subTab)
+{
+	if (checkEmpty())
+	{
+		cout << "表为空" << endl;
+		return;
+	}
+	if (subTab>=m_listLength)
+	{
+		cout << "越界访问！" << endl;
+		return;
+	}
+	for (int i = subTab; i < m_listLength; i++)
+	{
+		m_cgSqList[i] = m_cgSqList[i + 1];
+	}
+	m_listLength--;
+	cout << "删除完毕！" << endl;
+}
+
+
 void mainMenu()
 {
 	cout << "===================================" << endl;
@@ -432,7 +488,8 @@ void mainMenu()
 	cout << "============3、商品排序============" << endl;
 	cout << "============4、指定输出============" << endl;
 	cout << "============5、打印全部============" << endl;
-	cout << "============6、退出程序============" << endl;
+	cout << "============6、删除商品============" << endl;
+	cout << "============7、退出程序============" << endl;
 	cout << "===================================" << endl;
 }
 
@@ -506,6 +563,27 @@ int main()
 			sqList.toString();
 			break;
 		case 6:
+		{
+			cout << "选择删除方法：1、通过条件查找删除 2、通过序号删除" << endl;
+			int tempFlag;
+			cin >> tempFlag;
+			if (tempFlag==1)
+			{
+				sqList.delGoods();
+			}
+			if (tempFlag==2)
+			{
+				int sqTab;
+				cout << "输入要删除的序号：" << endl;
+				cin >> sqTab;
+				sqList.delGoods(sqTab);
+			}
+			else
+			{
+				cout << "输入错误！！！" << endl;
+			}
+		}break;
+		case 7:
 			return 0;
 		default:
 			break;
